@@ -37,6 +37,13 @@ def test_feed_url_and_override():
     assert adapter.feed_url("acme", "https://example.com/feed.xml") == "https://example.com/feed.xml"
 
 
+def test_personio_com_board_gets_com_apply_urls():
+    jobs = PersonioAdapter().parse_board(
+        FIXTURE.read_bytes(), "acme", override="https://acme.jobs.personio.com/xml"
+    )
+    assert jobs[0].apply_url == "https://acme.jobs.personio.com/job/2211334"
+
+
 def test_canonicalize_url_strips_tracking():
     url = "https://Example.jobs.personio.de/job/123/?utm_source=linkedin&ref=x"
     assert canonicalize_url(url) == "https://example.jobs.personio.de/job/123"
