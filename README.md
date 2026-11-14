@@ -84,9 +84,11 @@ Tests run entirely on recorded fixtures — no network, no live boards.
 MVP progress: skeleton (FastAPI + PostgreSQL/SQLite + Docker + CI),
 adapter contract, idempotent ingest with change stats, the four
 highest-value adapters (Personio, Ashby, Greenhouse, Lever), the
-rule-based scoring engine, tracker dedupe, a registry seeded with 46
-verified company boards, and the dashboard — 38 tests, plus a live
-validation against a real Personio feed (15 postings ingested; the
-repeat poll answered 304 Not Modified, as designed). Next: Recruitee /
-SmartRecruiters / Workable adapters, and feeding the export to the
-job-search pipeline's scheduled runs.
+rule-based scoring engine, tracker dedupe, a registry of 85 verified
+company boards (72 enabled across the four adapters, 13 parked until
+their adapters land), and the dashboard — 43 tests, plus live
+validation: a full-registry run ingested 1,837 active postings (231
+scored above the surfacing threshold after tracker dedupe), and a
+repeat poll against a real Personio feed answered 304 Not Modified,
+as designed. Next: Recruitee / SmartRecruiters / Workable adapters,
+and feeding the export to the job-search pipeline's scheduled runs.
