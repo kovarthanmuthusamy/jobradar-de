@@ -45,8 +45,14 @@ def title_key(title: str) -> str:
     return _normalize(title)
 
 
+# Gender/diversity boilerplate tokens appear in nearly every German title
+# ("(m/w/d)") and would otherwise inflate the title-overlap coefficient into
+# false-positive matches between unrelated roles at the same company.
+_TITLE_NOISE = {"m", "w", "d", "f", "x", "mwd", "gn", "all genders"}
+
+
 def _tokens(text: str) -> set[str]:
-    return set(_normalize(text).split())
+    return {t for t in _normalize(text).split() if t not in _TITLE_NOISE}
 
 
 @dataclass
@@ -80,6 +86,21 @@ def load_tracker_keys(path: str | Path) -> TrackerIndex:
     return index
 
 
+def _company_matches(a: str, b: str) -> bool:
+    if a == b:
+        return True
+    # Tracker names often carry extra words the registry omits, e.g. tracker
+    # "octonomy AI GmbH" vs registry "octonomy" — accept a token-subset match
+    # when the smaller side is distinctive enough not to over-match.
+    ta, tb = set(a.split()), set(b.split())
+    if not ta or not tb:
+        return False
+    smaller, larger = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
+    if not smaller <= larger:
+        return False
+    return len(smaller) >= 2 or any(len(t) >= 4 for t in smaller)
+
+
 def is_tracker_match(
     index: TrackerIndex, company: str, title: str, apply_url: str | None = None
 ) -> bool:
@@ -89,7 +110,7 @@ def is_tracker_match(
     t_key = title_key(title)
     t_tokens = _tokens(title)
     for key_company, key_title, key_tokens in index.entries:
-        if key_company != c_key:
+        if not _company_matches(key_company, c_key):
             continue
         if key_title == t_key:
             return True

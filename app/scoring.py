@@ -74,6 +74,13 @@ _FOREIGN_CITIES = {
     "stockholm", "copenhagen", "helsinki", "dublin", "madrid", "barcelona",
     "lisbon", "milan", "rome", "brussels", "luxembourg", "new york",
     "san francisco", "toronto", "singapore", "tokyo", "bangalore", "tel aviv",
+    # Seen on global Ashby/Greenhouse boards during the first full run:
+    "são paulo", "sao paulo", "palo alto", "montréal", "montreal", "austin",
+    "boston", "seattle", "chicago", "vancouver", "hyderabad", "canada",
+    "brazil", "usa", "united states", "india", "australia", "switzerland",
+    "schweiz", "sweden", "spain", "france", "italy", "poland", "hungary",
+    # Seen in batch 2 (Awin board): Romanian office surfacing as in-scope.
+    "iași", "iasi", "romania", "rumänien",
 }
 
 _GERMAN_LEVEL_RE = re.compile(
@@ -90,6 +97,13 @@ _GERMAN_PLUS_RE = re.compile(
 )
 _DRIVING_RE = re.compile(
     r"führerschein|fahrerlaubnis|driving licen[cs]e|driver'?s licen[cs]e", re.IGNORECASE
+)
+# Talent-pool / speculative postings are not concrete roles — the pipeline
+# never applies to them as if they were, so they must not surface.
+_TALENT_POOL_RE = re.compile(
+    r"talent pool|talentpool|talent community|express interest|general application|"
+    r"initiativbewerbung|unsolicited application|speculative application",
+    re.IGNORECASE,
 )
 _YEARS_RE = re.compile(r"(\d+)\s*\+?\s*(years?|jahre)\b", re.IGNORECASE)
 
@@ -230,6 +244,9 @@ def score_job(job: Job) -> ScoreResult:
     if _DRIVING_RE.search(text):
         flags.append("driving_licence_required")
         notes.append("Driving licence required — hard flag (he has none)")
+    if _TALENT_POOL_RE.search(job.title):
+        flags.append("talent_pool")
+        notes.append("Talent-pool/speculative posting, not a concrete role")
     type_points = _type_score(job)
 
     breakdown = {
