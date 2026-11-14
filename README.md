@@ -24,9 +24,9 @@ feeds underneath them are public and happy to be read politely.
 | ATS | Feed | Status |
 | --- | --- | --- |
 | Personio | XML feed per company | ✅ implemented |
-| Ashby | Public posting API | planned |
-| Greenhouse | Public board API | planned |
-| Lever | Public postings API | planned |
+| Ashby | Public posting API | ✅ implemented |
+| Greenhouse | Public board API | ✅ implemented |
+| Lever | Public postings API | ✅ implemented |
 | Recruitee / SmartRecruiters / Workable | Public APIs | planned |
 
 Companies are data, not code: add an entry to `data/companies.yaml`
@@ -36,13 +36,16 @@ board per run, respecting each feed's caching headers.
 
 ## Pipeline
 
-`ingest → normalize → dedupe → score (rules, next step) → export`
+`ingest → normalize → dedupe → score (rules) → export`
 
-Scoring will mirror a fixed rule set: AI Agentic / ML / MLOps / AI-software
-roles, Germany first, German-language requirements weighted lightly
-(hard-skip only above C1), full-time > internship > working student,
-driving-licence requirements flagged. Above-threshold roles land in the
-export with their per-factor breakdown.
+Scoring mirrors a fixed rule set: AI Agentic / ML / MLOps / AI-software
+roles, Germany first (then NL/NO/UK/AT), German-language requirements
+weighted lightly (hard-skip only above C1), full-time > internship >
+working student, driving-licence requirements hard-flagged. The export
+also dedupes against the application tracker (set `JOBRADAR_TRACKER_PATH`
+to its `data.json`): already-applied or rejected roles never resurface.
+Above-threshold roles (>60) land in `GET /api/export` with their
+per-factor breakdown; `?since=<ISO>` returns only a delta of new finds.
 
 ## Quick start
 
@@ -78,7 +81,12 @@ Tests run entirely on recorded fixtures — no network, no live boards.
 
 ## Status
 
-Step 1 of the MVP: skeleton (FastAPI + PostgreSQL/SQLite + Docker + CI),
-adapter contract, Personio adapter, idempotent ingest with change stats.
-Next: Ashby / Greenhouse / Lever adapters, then the scoring engine,
-tracker dedupe, and the dashboard.
+MVP progress: skeleton (FastAPI + PostgreSQL/SQLite + Docker + CI),
+adapter contract, idempotent ingest with change stats, the four
+highest-value adapters (Personio, Ashby, Greenhouse, Lever), the
+rule-based scoring engine, tracker dedupe, a registry seeded with 46
+verified company boards, and the dashboard — 38 tests, plus a live
+validation against a real Personio feed (15 postings ingested; the
+repeat poll answered 304 Not Modified, as designed). Next: Recruitee /
+SmartRecruiters / Workable adapters, and feeding the export to the
+job-search pipeline's scheduled runs.
