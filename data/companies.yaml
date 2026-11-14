@@ -27,6 +27,22 @@ companies:
   - {name: Magazino, ats: personio, board_id: magazino, feed_url: "https://magazino.jobs.personio.com/xml", country: Germany, enabled: true}
   - {name: Isarsoft, ats: personio, board_id: isarsoft, feed_url: "https://isarsoft.jobs.personio.com/xml", country: Germany, enabled: true}
   - {name: Crate.io, ats: personio, board_id: crate-io, feed_url: "https://crate-io.jobs.personio.com/xml", enabled: true}
+  # Added 2026-11-14 (registry expansion from the sweep files; every feed verified live)
+  - {name: "1KOMMA5°", ats: personio, board_id: 1komma5grad, country: Germany, enabled: true}
+  - {name: ellamind, ats: personio, board_id: ellamind, country: Germany, enabled: true}
+  - {name: itemis, ats: personio, board_id: itemis, country: Germany, enabled: true}
+  - {name: TESVOLT, ats: personio, board_id: tesvolt-gmbh, country: Germany, enabled: true}
+  - {name: 36ZERO Vision, ats: personio, board_id: 36zerovision, feed_url: "https://36zerovision.jobs.personio.com/xml", country: Germany, enabled: true}
+  - {name: AskUI, ats: personio, board_id: askui-gmbh, feed_url: "https://askui-gmbh.jobs.personio.com/xml", country: Germany, enabled: true}
+  - {name: ExB, ats: personio, board_id: exb, feed_url: "https://exb.jobs.personio.com/xml", country: Germany, enabled: true}
+  - {name: Gestalt Robotics, ats: personio, board_id: gestalt-robotics, feed_url: "https://gestalt-robotics.jobs.personio.com/xml", country: Germany, enabled: true}
+  - {name: octonomy, ats: personio, board_id: octonomy-ai, feed_url: "https://octonomy-ai.jobs.personio.com/xml", country: Germany, enabled: true}
+  # Batch 2 (2026-11-14, web research; every feed verified live before enabling)
+  - {name: Yoummday, ats: personio, board_id: yoummday-gmbh, country: Germany, enabled: true}
+  - {name: Taxy.io, ats: personio, board_id: taxy-io-gmbh, country: Germany, enabled: true}
+  - {name: Autonomous Teaming, ats: personio, board_id: autonomous-teaming, country: Germany, enabled: true}
+  - {name: XITASO, ats: personio, board_id: xitaso, country: Germany, enabled: true}
+  - {name: Eraneos, ats: personio, board_id: eraneos, country: Germany, enabled: true}
   # ---- Ashby ----
   - {name: Aleph Alpha, ats: ashby, board_id: AlephAlpha, country: Germany, enabled: true}
   - {name: Almetra, ats: ashby, board_id: almetra, country: Germany, enabled: true}
@@ -43,13 +59,34 @@ companies:
   - {name: Bowatt, ats: ashby, board_id: bowatt, country: Germany, enabled: true}
   - {name: Hawk AI, ats: ashby, board_id: hawk, country: Germany, enabled: true}
   - {name: Mistral AI, ats: ashby, board_id: mistral.ai, enabled: true}
+  # Batch 2 (2026-11-14, web research; verified live)
+  - {name: DeepL, ats: ashby, board_id: DeepL, country: Germany, enabled: true}
+  - {name: Parloa, ats: ashby, board_id: parloa, country: Germany, enabled: true}
+  - {name: Langdock, ats: ashby, board_id: Langdock, country: Germany, enabled: true}
+  - {name: Langfuse, ats: ashby, board_id: langfuse, country: Germany, enabled: true}
+  - {name: Almedia, ats: ashby, board_id: almedia, country: Germany, enabled: true}
+  - {name: Clera, ats: ashby, board_id: Clera, country: Germany, enabled: true}
+  - {name: Deepslate, ats: ashby, board_id: deepslate, country: Germany, enabled: true}
+  - {name: Kuro Technology, ats: ashby, board_id: kuro, country: Germany, enabled: true}
+  - {name: Andercore, ats: ashby, board_id: andercore, country: Germany, enabled: true}
+  - {name: PPRO, ats: ashby, board_id: ppro, country: Germany, enabled: true}
+  - {name: Mercura, ats: ashby, board_id: mercura, country: Germany, enabled: true}
+  - {name: SE3 Labs, ats: ashby, board_id: se3, country: Germany, enabled: true}
   # ---- Greenhouse ----
   - {name: NavVis, ats: greenhouse, board_id: navvis, country: Germany, enabled: true}
   - {name: Alpine Eagle, ats: greenhouse, board_id: alpineeagle, country: Germany, enabled: true}
   - {name: KINEXON, ats: greenhouse, board_id: kinexon, country: Germany, enabled: true}
   - {name: Agile Robots, ats: greenhouse, board_id: agilerobotsse, country: Germany, enabled: true}
+  # Batch 2 (2026-11-14, web research; verified live)
+  - {name: KONUX, ats: greenhouse, board_id: konux, country: Germany, enabled: true}
+  - {name: Awin, ats: greenhouse, board_id: awin, country: Germany, enabled: true}
+  - {name: Solaris, ats: greenhouse, board_id: solarisbank, country: Germany, enabled: true}
   # ---- Lever ----
   - {name: SonarSource, ats: lever, board_id: sonarsource, enabled: true}
+  # Batch 2 (2026-11-14, web research; verified live)
+  - {name: QuantCo, ats: lever, board_id: "quantco-", country: Germany, enabled: true}
+  - {name: FINN, ats: lever, board_id: finn, country: Germany, enabled: true}
+  - {name: Qonto, ats: lever, board_id: qonto, country: France, enabled: true}
   # ---- Adapters pending (verified boards, disabled until the adapter lands) ----
   - {name: Tytan Technologies, ats: recruitee, board_id: tytantechnologiesgmbh, country: Germany, enabled: false}
   - {name: UP42, ats: recruitee, board_id: up42gmbh, country: Germany, enabled: false}
@@ -57,3 +94,11 @@ companies:
   - {name: BEUMER Group, ats: smartrecruiters, board_id: BEUMERGroup1, country: Germany, enabled: false}
   - {name: Statice, ats: workable, board_id: statice, country: Germany, enabled: false}
   - {name: dltHub, ats: workable, board_id: dlthub, country: Germany, enabled: false}
+  # Batch 2 parked (2026-11-14): boards evidenced, adapters not built yet
+  - {name: Machine Learning Reply, ats: recruitee, board_id: machinelearningreply, country: Germany, enabled: false}
+  - {name: Nomitri, ats: recruitee, board_id: nomitri, country: Germany, enabled: false}
+  - {name: eGroup, ats: recruitee, board_id: egroup, country: Germany, enabled: false}
+  - {name: Roland Berger, ats: smartrecruiters, board_id: RolandBerger, country: Germany, enabled: false}
+  - {name: Sportradar, ats: smartrecruiters, board_id: Sportradar, country: Switzerland, enabled: false}
+  - {name: n8n, ats: workable, board_id: n8n, country: Germany, enabled: false}
+  - {name: Speexx, ats: workable, board_id: speexx, country: Germany, enabled: false}
