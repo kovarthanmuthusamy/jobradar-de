@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JobRadar DE</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font-family: system-ui, sans-serif; margin: 2rem auto; max-width: 880px; padding: 0 1rem; }
+  h1 { font-size: 1.4rem; margin-bottom: 0.2rem; }
+  .sub { opacity: 0.7; margin-bottom: 1.2rem; font-size: 0.95rem; }
+  .stats { display: flex; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .stats b { font-size: 1.25rem; display: block; }
+  .bar { display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 0.55rem 0.4rem; border-bottom: 1px solid #8884; vertical-align: top; }
+  .role { font-size: 0.9rem; opacity: 0.85; }
+  .role a { color: inherit; }
+  .score { font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 999px; background: #2e7d32; color: #fff; white-space: nowrap; }
+  .score.mid { background: #b26a00; }
+  .score.low { background: #888; }
+  .flags { font-size: 0.8rem; color: #c62828; }
+  button { padding: 0.4rem 0.9rem; border-radius: 6px; border: 1px solid #8886; background: transparent; color: inherit; cursor: pointer; }
+  input[type="search"] { padding: 0.4rem 0.6rem; border-radius: 6px; border: 1px solid #8886; background: transparent; color: inherit; }
+</style>
+</head>
+<body>
+<h1>JobRadar DE</h1>
+<div class="sub">Public ATS feeds in, scored roles out. No boards opened, no LLM in the loop.</div>
+
+<div class="stats">
+  <div><b id="stat-total">–</b>active jobs</div>
+  <div><b id="stat-above">–</b>above threshold</div>
+  <div><b id="stat-excluded">–</b>hidden (already tracked)</div>
+</div>
+
+<div class="bar">
+  <button id="run">Run ingest</button>
+  <label><input type="checkbox" id="only-above" checked> Only above threshold (&gt;60)</label>
+  <input type="search" id="q" placeholder="Filter company / role / city…">
+  <span id="run-status"></span>
+</div>
+
+<table>
+  <thead><tr><th>Company</th><th>Score</th><th>Location</th><th>Posted</th><th>Source</th></tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<script>
+let allJobs = [];
+let threshold = 60;
+
+function scoreClass(s) { return s > 60 ? "" : (s >= 45 ? "mid" : "low"); }
+
+function render() {
+  const q = document.getElementById("q").value.toLowerCase();
+  const onlyAbove = document.getElementById("only-above").checked;
+  const rows = allJobs.filter(j =>
+    (!onlyAbove || j.score > threshold) &&
+    (!q || (j.company + " " + j.title + " " + (j.city || "")).toLowerCase().includes(q))
+  );
+  document.getElementById("rows").innerHTML = rows.map(j => `
+    <tr>
+      <td>${j.company}<div class="role"><a href="${j.apply_url}" target="_blank" rel="noopener">${j.title}</a></div>
+      ${j.flags && j.flags.length ? `<div class="flags">${j.flags.join(", ")}</div>` : ""}</td>
+      <td><span class="score ${scoreClass(j.score)}">${j.score}</span></td>
+      <td>${j.location || ""}</td>
+      <td>${j.posted_at ? j.posted_at.slice(0, 10) : ""}</td>
+      <td>${j.source}</td>
+    </tr>`).join("");
+  document.getElementById("stat-above").textContent = allJobs.filter(j => j.score > threshold).length;
+}
+
+async function load() {
+  const res = await fetch("/api/export?include_below=true");
+  const data = await res.json();
+  threshold = data.threshold;
+  allJobs = data.jobs;
+  document.getElementById("stat-total").textContent = data.count;
+  document.getElementById("stat-excluded").textContent = data.excluded_by_tracker;
+  render();
+}
+
+document.getElementById("run").onclick = async () => {
+  const status = document.getElementById("run-status");
+  status.textContent = "Ingesting…";
+  const res = await fetch("/api/ingest/run", { method: "POST" });
+  const data = await res.json();
+  status.textContent = `Done: ${data.total_new} new`;
+  load();
+};
+document.getElementById("only-above").onchange = render;
+document.getElementById("q").oninput = render;
+load();
+</script>
+</body>
+</html>
