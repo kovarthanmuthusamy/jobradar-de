@@ -78,10 +78,14 @@ class PersonioAdapter(BaseAdapter):
             )
         return jobs
 
-    def parse_board(self, content: bytes, board_id: str) -> list[RawJob]:
+    def parse_board(
+        self, content: bytes, board_id: str, override: str | None = None
+    ) -> list[RawJob]:
+        # Boards live on personio.de or personio.com; the apply pages sit on
+        # the same host as the feed, so derive the base from the feed URL.
+        feed = self.feed_url(board_id, override)
+        base = feed[: -len("/xml")] if feed.endswith("/xml") else feed
         jobs = self.parse(content)
         for job in jobs:
-            job.apply_url = canonicalize_url(
-                f"https://{board_id}.jobs.personio.de/job/{job.external_id}"
-            )
+            job.apply_url = canonicalize_url(f"{base}/job/{job.external_id}")
         return jobs

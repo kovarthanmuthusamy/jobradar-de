@@ -93,7 +93,9 @@ class BaseAdapter:
     def parse(self, content: bytes) -> list[RawJob]:
         raise NotImplementedError
 
-    def parse_board(self, content: bytes, board_id: str) -> list[RawJob]:
+    def parse_board(
+        self, content: bytes, board_id: str, override: str | None = None
+    ) -> list[RawJob]:
         """Parse with board context (some ATS feeds need it to build apply URLs)."""
         return self.parse(content)
 
@@ -111,4 +113,4 @@ class BaseAdapter:
             return None, result
         if result.status_code != 200:
             raise RuntimeError(f"{self.name} feed returned HTTP {result.status_code}")
-        return self.parse_board(result.content, board_id), result
+        return self.parse_board(result.content, board_id, override), result
