@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workzag-jobs>
+  <position>
+    <id>2211334</id>
+    <subcompany>Example GmbH</subcompany>
+    <office>Berlin</office>
+    <additionalOffices>
+      <office>Munich</office>
+    </additionalOffices>
+    <department>Engineering</department>
+    <recruitingCategory>IT</recruitingCategory>
+    <name>Machine Learning Engineer (m/f/d)</name>
+    <jobDescriptions>
+      <jobDescription>
+        <name>Your tasks</name>
+        <value><![CDATA[<p>You build <strong>LLM agents</strong> and RAG pipelines in Python.</p><p>Stack: FastAPI, PyTorch, Docker, Kubernetes.</p>]]></value>
+      </jobDescription>
+      <jobDescription>
+        <name>Your profile</name>
+        <value><![CDATA[<p>Experience with ML systems in production. English is our working language; German B2 is a plus.</p>]]></value>
+      </jobDescription>
+    </jobDescriptions>
+    <employmentType>permanent</employmentType>
+    <schedule>full-time</schedule>
+    <seniority>experienced</seniority>
+    <keywords>python, machine learning, llm</keywords>
+    <createdAt>2026-11-12 09:30:00</createdAt>
+  </position>
+  <position>
+    <id>2211445</id>
+    <subcompany>Example GmbH</subcompany>
+    <office>Munich</office>
+    <department>Data</department>
+    <recruitingCategory>IT</recruitingCategory>
+    <name>Working Student Data Science (m/f/d)</name>
+    <jobDescriptions>
+      <jobDescription>
+        <name>Your tasks</name>
+        <value><![CDATA[<p>Support the data team with dashboards and analyses.</p>]]></value>
+      </jobDescription>
+    </jobDescriptions>
+    <employmentType>intern</employmentType>
+    <schedule>part-time</schedule>
+    <seniority>student</seniority>
+    <keywords>python, sql</keywords>
+    <createdAt>2026-11-13 14:05:00</createdAt>
+  </position>
+</workzag-jobs>
