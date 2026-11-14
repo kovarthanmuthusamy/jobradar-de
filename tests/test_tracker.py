@@ -50,6 +50,37 @@ def test_match_despite_legal_suffix_and_location_words(tmp_path):
     assert is_tracker_match(keys, "Beta", "MLOps Engineer") is True
 
 
+def test_match_when_tracker_name_has_extra_words(tmp_path):
+    # Real case: tracker "octonomy AI GmbH" vs registry "octonomy".
+    data = {
+        "jobs": [
+            {
+                "company": "octonomy AI GmbH",
+                "role": "(Senior) Integration Engineer – AI Platform (m/w/d), Köln/Remote",
+                "status": "Submitted",
+            }
+        ]
+    }
+    path = tmp_path / "data.json"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    keys = load_tracker_keys(path)
+    assert (
+        is_tracker_match(
+            keys, "octonomy", "(Senior) Integration Engineer - AI Platform (m/w/d)"
+        )
+        is True
+    )
+    assert is_tracker_match(keys, "octonomy", "Forward Deployed Engineer") is False
+    # The real feed titles carry "(m/w/d)" — those tokens must not create a
+    # false match against the applied role's title (real octonomy case).
+    assert (
+        is_tracker_match(keys, "octonomy", "Forward-Deployed Engineer (m/w/d)") is False
+    )
+    assert (
+        is_tracker_match(keys, "octonomy", "Senior Account Executive (m/w/d)") is False
+    )
+
+
 def test_no_match_for_other_company_or_role(tmp_path):
     keys = _keys(tmp_path)
     assert is_tracker_match(keys, "Acme", "Product Manager") is False

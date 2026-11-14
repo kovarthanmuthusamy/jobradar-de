@@ -85,6 +85,25 @@ def test_foreign_office_does_not_inherit_company_country():
     assert result.surfaces is False
 
 
+def test_sao_paulo_office_does_not_surface():
+    result = score_job(
+        _job(
+            title="Forward Deployed Engineer",
+            city="São Paulo Office",
+            location_text="São Paulo Office",
+            country=None,
+        )
+    )
+    assert result.breakdown["location"] == 0
+    assert result.surfaces is False
+
+
+def test_talent_pool_posting_is_flagged():
+    result = score_job(_job(title="Computer Vision Engineering - Talent Pool"))
+    assert "talent_pool" in result.flags
+    assert result.surfaces is False
+
+
 def test_german_title_patterns_match():
     result = score_job(
         _job(
