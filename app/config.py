@@ -12,6 +12,8 @@ class Settings:
         "INGEST_USER_AGENT", "JobRadarDE/0.1 (+personal job aggregator)"
     )
     http_timeout_seconds: float = float(os.environ.get("HTTP_TIMEOUT_SECONDS", "30"))
+    # Path to the job tracker's data.json; tracker dedupe is off when unset/missing.
+    tracker_path: str | None = os.environ.get("JOBRADAR_TRACKER_PATH") or None
 
 
 settings = Settings()
