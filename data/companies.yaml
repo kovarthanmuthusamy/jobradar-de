@@ -1,0 +1,12 @@
+# Company registry: one entry per employer board we poll.
+# Adding a company is data, not code. Find board_id on the company's own
+# career page (the ATS subdomain/token in its URL). Only enable an entry
+# once the board id is verified on the employer's site.
+companies: []
+# Example (Personio — the feed is https://<board_id>.jobs.personio.de/xml):
+#   - name: Example GmbH
+#     ats: personio
+#     board_id: example-gmbh
+#     careers_url: https://example-gmbh.jobs.personio.de/
+#     country: Germany
+#     enabled: true
