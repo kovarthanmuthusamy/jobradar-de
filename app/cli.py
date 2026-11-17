@@ -1,6 +1,6 @@
 """One-shot refresh + export — what the scheduled job-search runs invoke.
 
-    python -m app.cli [--since <ISO>] [--threshold 60] [--no-ingest]
+    python -m app.cli [--since <ISO>] [--threshold 50] [--no-ingest]
 
 Runs the registry load and a full ingest of every enabled board
 (incremental: conditional fetches keep a no-change run near-free), then
@@ -19,6 +19,7 @@ from app.db import SessionLocal, init_db
 from app.exporting import build_export
 from app.ingest import run_ingest
 from app.registry import load_companies
+from app.scoring import THRESHOLD
 
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _REGISTRY = _PROJECT_ROOT / "data" / "companies.yaml"
@@ -28,7 +29,7 @@ _DEFAULT_OUT = _PROJECT_ROOT / "exports" / "latest.json"
 def main() -> int:
     parser = argparse.ArgumentParser(prog="jobradar")
     parser.add_argument("--since", default=None, help="ISO timestamp; delta export only")
-    parser.add_argument("--threshold", type=int, default=60)
+    parser.add_argument("--threshold", type=int, default=THRESHOLD)
     parser.add_argument("--no-ingest", action="store_true", help="export from current DB")
     parser.add_argument("--out", default=str(_DEFAULT_OUT))
     args = parser.parse_args()

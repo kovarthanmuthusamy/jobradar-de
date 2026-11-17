@@ -20,6 +20,7 @@ def job_out(j: Job) -> dict:
     return {
         "id": j.id,
         "company": j.company.name,
+        "company_size_band": j.company.size_band,
         "title": j.title,
         "location": j.location_text,
         "city": j.city,

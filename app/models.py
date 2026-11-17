@@ -23,6 +23,9 @@ class Company(Base):
     feed_url_override: Mapped[str | None] = mapped_column(String(500), nullable=True)
     careers_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     country: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    # Approx. employee band from the registry ("51-250", "251-1000", "1000+");
+    # None = unknown. Lets the pipeline weight small firms up at triage.
+    size_band: Mapped[str | None] = mapped_column(String(16), nullable=True)
     enabled: Mapped[bool] = mapped_column(Boolean, default=True)
     # Conditional-fetch state: lets an unchanged feed cost one tiny 304 response.
     etag: Mapped[str | None] = mapped_column(String(300), nullable=True)

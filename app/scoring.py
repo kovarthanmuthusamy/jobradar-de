@@ -2,7 +2,9 @@
 
 Mirrors the standing job-search rules: target AI/ML software roles, Germany
 first then NL/NO/UK/AT, entry/mid welcome, German requirements weighted a
-LITTLE (hard-skip only above C1), full-time > internship, working-student
+LITTLE (B2 and below weighted lightly; C1/fluent/verhandlungssicher
+hard-excluded unless English is a stated working language; native/C2
+always hard-excluded), full-time > internship, working-student
 roles hard-excluded (standing rule, 2026-11-17), driving-licence
 requirements flagged. Every point is accounted for in the breakdown so a
 human (or a later pipeline step) can see exactly why.
@@ -13,7 +15,7 @@ from dataclasses import dataclass, field
 
 from app.models import Job
 
-THRESHOLD = 60  # surfaces when total > THRESHOLD
+THRESHOLD = 50  # surfaces when total > THRESHOLD (lowered 60 -> 50 on 2026-11-17)
 
 _ROLE_PATTERNS: list[tuple[str, int]] = [
     (r"machine learning engineer", 38),
@@ -89,10 +91,42 @@ _GERMAN_LEVEL_RE = re.compile(
     re.IGNORECASE,
 )
 _GERMAN_ABOVE_C1_RE = re.compile(
-    r"muttersprach|native (speaker|german)|verhandlungssicher|fließend\w*\s+deutsch|"
-    r"deutsch[^.\n]{0,40}fließend|\bc2\b[^.\n]{0,40}(deutsch|german)|(deutsch|german)[^.\n]{0,40}\bc2\b",
+    r"muttersprach|native (speaker|german)|"
+    r"\bc2\b[^.\n]{0,40}(deutsch|german)|(deutsch|german)[^.\n]{0,40}\bc2\b",
     re.IGNORECASE,
 )
+# C1-tier German (fluent / fließend): hard-excluded since 2026-11-17 unless
+# the posting states English as a working language. B2 and below stay allowed.
+_GERMAN_FLUENT_RE = re.compile(
+    r"fließend\w*\s+deutsch|deutsch[^.\n]{0,40}fließend|"
+    r"fließende[rsn]?\s+deutschkenntnisse|deutschkenntnisse[^.\n]{0,30}fließend|"
+    r"fluent\w*\s+(in\s+)?german|german[^.\n]{0,40}fluent",
+    re.IGNORECASE,
+)
+_ENGLISH_WORKING_RE = re.compile(
+    r"working language[^.\n]{0,40}english|english[^.\n]{0,40}working language|"
+    r"company language[^.\n]{0,40}english|corporate language[^.\n]{0,40}english|"
+    r"arbeitssprache[^.\n]{0,40}englisch|englisch[^.\n]{0,40}arbeitssprache|"
+    r"unternehmenssprache[^.\n]{0,40}englisch|"
+    r"english-speaking (team|environment|workplace|office|company)",
+    re.IGNORECASE,
+)
+
+
+def _german_fluent_hit(text: str) -> re.Match | None:
+    """A C1-tier German requirement: a fluent pattern, or 'verhandlungssicher'
+    in a German context. The same word tied to Englisch/English does NOT
+    count — English at any level is acceptable."""
+    match = _GERMAN_FLUENT_RE.search(text)
+    if match:
+        return match
+    for m in re.finditer(r"verhandlungssicher", text, re.IGNORECASE):
+        before = text[max(0, m.start() - 45) : m.start()]
+        if re.search(r"deutsch|german", before, re.IGNORECASE) or not re.search(
+            r"englisch|english", before, re.IGNORECASE
+        ):
+            return m
+    return None
 _GERMAN_PLUS_RE = re.compile(
     r"(plus|von vorteil|nice to have|a bonus|wünschenswert)", re.IGNORECASE
 )
@@ -212,14 +246,33 @@ def _seniority_score(title: str, text: str) -> int:
 def _german_score(text: str) -> tuple[int, list[str], list[str]]:
     notes: list[str] = []
     if _GERMAN_ABOVE_C1_RE.search(text):
-        return 0, ["german_above_c1"], ["German above C1 (native/fluent/C2) — hard skip"]
+        return 0, ["german_above_c1"], ["German above C1 (native/C2) — hard skip"]
     match = _GERMAN_LEVEL_RE.search(text)
+    level = None
     if match:
         level = next(g for g in match.groups() if g and len(g) == 2).lower()
+    fluent = _german_fluent_hit(text)
+    if fluent is not None or level == "c1":
+        # C1-tier German requirement (C1 / fluent / verhandlungssicher):
+        # hard exclude since 2026-11-17, unless English is a stated
+        # working language or the German is only a plus.
+        anchor = fluent if fluent is not None else match
+        window = text[max(0, anchor.start() - 80) : anchor.end() + 80]
+        if _GERMAN_PLUS_RE.search(window):
+            return 9, [], ["German C1/fluent stated as a plus, not a requirement"]
+        if _ENGLISH_WORKING_RE.search(text):
+            return 8, [], [
+                "German C1/fluent required, but English is a stated working "
+                "language — allowed (rule 2026-11-17)"
+            ]
+        return 0, ["german_c1_required"], [
+            "German C1/fluent/verhandlungssicher required — hard exclude (rule 2026-11-17)"
+        ]
+    if match:
         window = text[max(0, match.start() - 80) : match.end() + 80]
         if _GERMAN_PLUS_RE.search(window):
             return 9, [], [f"German {level.upper()} stated as a plus"]
-        points = {"a1": 10, "a2": 10, "b1": 9, "b2": 8, "c1": 5, "c2": 0}[level]
+        points = {"a1": 10, "a2": 10, "b1": 9, "b2": 8, "c2": 0}[level]
         notes.append(f"German {level.upper()} required -> {points}/10 (small weight, per rule)")
         if level == "c2":
             return 0, ["german_above_c1"], notes

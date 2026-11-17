@@ -29,6 +29,7 @@ def load_companies(db: Session, path: str | Path) -> int:
                     feed_url_override=entry.get("feed_url"),
                     careers_url=entry.get("careers_url"),
                     country=entry.get("country"),
+                    size_band=entry.get("size_band"),
                     enabled=entry.get("enabled", True),
                 )
             )
@@ -37,6 +38,7 @@ def load_companies(db: Session, path: str | Path) -> int:
             existing.name = entry["name"]
             existing.careers_url = entry.get("careers_url", existing.careers_url)
             existing.country = entry.get("country", existing.country)
+            existing.size_band = entry.get("size_band", existing.size_band)
             existing.enabled = entry.get("enabled", existing.enabled)
     db.commit()
     return count
