@@ -104,6 +104,27 @@ def test_talent_pool_posting_is_flagged():
     assert result.surfaces is False
 
 
+def test_werkstudent_title_is_hard_flagged():
+    result = score_job(_job(title="Werkstudent KI & Robotik (m/w/d)"))
+    assert "working_student_excluded" in result.flags
+    assert result.surfaces is False
+
+
+def test_working_student_employment_type_is_hard_flagged():
+    result = score_job(
+        _job(title="Data Analyst", employment_type="part-time working_student")
+    )
+    assert "working_student_excluded" in result.flags
+    assert result.surfaces is False
+
+
+def test_internship_is_not_caught_by_working_student_rule():
+    result = score_job(
+        _job(title="Machine Learning Intern", employment_type="full-time intern")
+    )
+    assert "working_student_excluded" not in result.flags
+
+
 def test_german_title_patterns_match():
     result = score_job(
         _job(
