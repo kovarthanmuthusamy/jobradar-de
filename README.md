@@ -40,12 +40,16 @@ board per run, respecting each feed's caching headers.
 
 Scoring mirrors a fixed rule set: AI Agentic / ML / MLOps / AI-software
 roles, Germany first (then NL/NO/UK/AT), German-language requirements
-weighted lightly (hard-skip only above C1), full-time > internship >
-working student, driving-licence requirements hard-flagged. The export
-also dedupes against the application tracker (set `JOBRADAR_TRACKER_PATH`
-to its `data.json`): already-applied or rejected roles never resurface.
-Above-threshold roles (>60) land in `GET /api/export` with their
-per-factor breakdown; `?since=<ISO>` returns only a delta of new finds.
+weighted lightly at B2 and below (C1/fluent/verhandlungssicher is a hard
+exclude since 2026-11-17, unless the posting states English as a working
+language; native/C2 is always excluded), full-time > internship,
+working-student roles hard-excluded, driving-licence requirements
+hard-flagged. The export also dedupes against the application tracker
+(set `JOBRADAR_TRACKER_PATH` to its `data.json`): already-applied or
+rejected roles never resurface. Above-threshold roles (>50) land in
+`GET /api/export` with their per-factor breakdown and, where the
+registry carries one, the company's approximate size band
+(`company_size_band`); `?since=<ISO>` returns only a delta of new finds.
 
 ## Quick start
 
