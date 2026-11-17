@@ -2,9 +2,10 @@
 
 Mirrors the standing job-search rules: target AI/ML software roles, Germany
 first then NL/NO/UK/AT, entry/mid welcome, German requirements weighted a
-LITTLE (hard-skip only above C1), full-time > internship > working student,
-driving-licence requirements flagged. Every point is accounted for in the
-breakdown so a human (or a later pipeline step) can see exactly why.
+LITTLE (hard-skip only above C1), full-time > internship, working-student
+roles hard-excluded (standing rule, 2026-11-17), driving-licence
+requirements flagged. Every point is accounted for in the breakdown so a
+human (or a later pipeline step) can see exactly why.
 """
 
 import re
@@ -106,6 +107,18 @@ _TALENT_POOL_RE = re.compile(
     re.IGNORECASE,
 )
 _YEARS_RE = re.compile(r"(\d+)\s*\+?\s*(years?|jahre)\b", re.IGNORECASE)
+# Working-student roles are excluded entirely (standing rule, 2026-11-17).
+# Detection is deliberately scoped to the title and the employment type —
+# NOT the description, which mentions working students in passing for
+# unrelated roles. Internships are NOT caught by this (they stay allowed).
+_WS_TITLE_RE = re.compile(r"werkstudent|working[\s-]?student", re.IGNORECASE)
+
+
+def _is_working_student(job: Job) -> bool:
+    if _WS_TITLE_RE.search(job.title or ""):
+        return True
+    et = (job.employment_type or "").lower().replace("_", " ")
+    return "working student" in et or "werkstudent" in et
 
 
 @dataclass
@@ -247,6 +260,11 @@ def score_job(job: Job) -> ScoreResult:
     if _TALENT_POOL_RE.search(job.title):
         flags.append("talent_pool")
         notes.append("Talent-pool/speculative posting, not a concrete role")
+    if _is_working_student(job):
+        flags.append("working_student_excluded")
+        notes.append(
+            "Working-student role — hard flag (excluded entirely by standing rule, 2026-11-17)"
+        )
     type_points = _type_score(job)
 
     breakdown = {
