@@ -13,7 +13,11 @@ def _seed() -> None:
         db.query(Job).delete()
         db.query(Company).delete()
         company = Company(
-            name="Exporting Co", ats="personio", board_id="exporting-co", country="Germany"
+            name="Exporting Co",
+            ats="personio",
+            board_id="exporting-co",
+            country="Germany",
+            size_band="1000+",
         )
         db.add(company)
         db.flush()
@@ -48,7 +52,18 @@ def test_build_export_matches_endpoint_contract():
     assert body["tracker_dedupe"] is False  # no tracker path passed
     assert body["count"] == 1
     assert body["jobs"][0]["score"] > 60
+    assert body["jobs"][0]["company_size_band"] == "1000+"
     assert "description" not in body["jobs"][0]
+
+
+def test_build_export_default_threshold_is_50():
+    _seed()
+    db = SessionLocal()
+    try:
+        body = build_export(db)
+    finally:
+        db.close()
+    assert body["threshold"] == 50
 
 
 def test_build_export_since_in_future_is_empty():

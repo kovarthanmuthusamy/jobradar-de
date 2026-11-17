@@ -28,8 +28,8 @@ def _seed() -> None:
                 ),
                 Job(
                     company_id=company.id, source="personio", external_id="e2",
-                    title="Office Manager", location_text="Berlin", city="Berlin",
-                    country="Germany", employment_type="full-time permanent",
+                    title="Senior Office Manager", location_text="Berlin", city="Berlin",
+                    country="Germany", employment_type="part-time temporary",
                     apply_url="https://export-co.jobs.personio.de/job/e2",
                     description_text="Scheduling and office organization.",
                     content_hash="b",

@@ -35,15 +35,59 @@ def test_german_b2_as_plus_costs_almost_nothing():
     assert result.surfaces is True
 
 
-def test_german_c1_required_is_only_a_small_deduction():
+def test_german_c1_required_is_a_hard_exclude():
+    # Rule change 2026-11-17: C1-tier German is a hard exclude (was -5 pts).
     result = score_job(
         _job(
             description_text="Python, Docker, Kubernetes. "
             "Deutschkenntnisse auf C1-Niveau erforderlich."
         )
     )
-    assert result.breakdown["german"] == 5
+    assert "german_c1_required" in result.flags
+    assert result.surfaces is False
+
+
+def test_german_c1_allowed_when_english_is_the_working_language():
+    result = score_job(
+        _job(
+            description_text="Python, Docker. Deutschkenntnisse auf "
+            "C1-Niveau erforderlich. Our working language is English."
+        )
+    )
+    assert "german_c1_required" not in result.flags
     assert "german_above_c1" not in result.flags
+
+
+def test_german_verhandlungssicher_is_a_hard_exclude():
+    result = score_job(
+        _job(description_text="Python. Deutsch verhandlungssicher in Wort und Schrift.")
+    )
+    assert "german_c1_required" in result.flags
+    assert result.surfaces is False
+
+
+def test_english_verhandlungssicher_is_not_a_german_flag():
+    result = score_job(
+        _job(description_text="Python. Englisch verhandlungssicher in Wort und Schrift.")
+    )
+    assert "german_c1_required" not in result.flags
+    assert "german_above_c1" not in result.flags
+
+
+def test_german_fliessend_is_a_c1_tier_exclude():
+    result = score_job(
+        _job(description_text="Python. Fließende Deutschkenntnisse erforderlich.")
+    )
+    assert "german_c1_required" in result.flags
+    assert result.surfaces is False
+
+
+def test_german_b2_required_stays_allowed():
+    result = score_job(
+        _job(description_text="Python. Deutschkenntnisse auf B2-Niveau erforderlich.")
+    )
+    assert "german_c1_required" not in result.flags
+    assert result.breakdown["german"] == 8
 
 
 def test_german_native_level_is_a_hard_skip():
