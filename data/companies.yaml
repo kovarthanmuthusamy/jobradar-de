@@ -6,7 +6,7 @@
 # skipped automatically until their adapter lands.
 companies:
   # ---- Personio (jobs.personio.de) ----
-  - {name: TNG Technology Consulting, ats: personio, board_id: tngtech, country: Germany, enabled: true}
+  - {name: TNG Technology Consulting, ats: personio, board_id: tngtech, country: Germany, size_band: "251-1000", enabled: true}
   - {name: Juna AI, ats: personio, board_id: juna-ai, country: Germany, enabled: true}
   - {name: fruitcore robotics, ats: personio, board_id: fruitcore-robotics-gmbh, country: Germany, enabled: true}
   - {name: Wandelbots, ats: personio, board_id: wandelbots, country: Germany, enabled: true}
@@ -55,12 +55,12 @@ companies:
   - {name: Avelios Medical, ats: ashby, board_id: avelios-medical, country: Germany, enabled: true}
   - {name: Prior Labs, ats: ashby, board_id: prior-labs, country: Germany, enabled: true}
   - {name: Zelara, ats: ashby, board_id: zelara.ai, country: Germany, enabled: true}
-  - {name: Forto, ats: ashby, board_id: forto, country: Germany, enabled: true}
+  - {name: Forto, ats: ashby, board_id: forto, country: Germany, size_band: "251-1000", enabled: true}
   - {name: Bowatt, ats: ashby, board_id: bowatt, country: Germany, enabled: true}
   - {name: Hawk AI, ats: ashby, board_id: hawk, country: Germany, enabled: true}
-  - {name: Mistral AI, ats: ashby, board_id: mistral.ai, enabled: true}
+  - {name: Mistral AI, ats: ashby, board_id: mistral.ai, size_band: "251-1000", enabled: true}
   # Batch 2 (2026-11-14, web research; verified live)
-  - {name: DeepL, ats: ashby, board_id: DeepL, country: Germany, enabled: true}
+  - {name: DeepL, ats: ashby, board_id: DeepL, country: Germany, size_band: "1000+", enabled: true}
   - {name: Parloa, ats: ashby, board_id: parloa, country: Germany, enabled: true}
   - {name: Langdock, ats: ashby, board_id: Langdock, country: Germany, enabled: true}
   - {name: Langfuse, ats: ashby, board_id: langfuse, country: Germany, enabled: true}
@@ -79,14 +79,14 @@ companies:
   - {name: Agile Robots, ats: greenhouse, board_id: agilerobotsse, country: Germany, enabled: true}
   # Batch 2 (2026-11-14, web research; verified live)
   - {name: KONUX, ats: greenhouse, board_id: konux, country: Germany, enabled: true}
-  - {name: Awin, ats: greenhouse, board_id: awin, country: Germany, enabled: true}
-  - {name: Solaris, ats: greenhouse, board_id: solarisbank, country: Germany, enabled: true}
+  - {name: Awin, ats: greenhouse, board_id: awin, country: Germany, size_band: "1000+", enabled: true}
+  - {name: Solaris, ats: greenhouse, board_id: solarisbank, country: Germany, size_band: "251-1000", enabled: true}
   # ---- Lever ----
   - {name: SonarSource, ats: lever, board_id: sonarsource, enabled: true}
   # Batch 2 (2026-11-14, web research; verified live)
   - {name: QuantCo, ats: lever, board_id: "quantco-", country: Germany, enabled: true}
-  - {name: FINN, ats: lever, board_id: finn, country: Germany, enabled: true}
-  - {name: Qonto, ats: lever, board_id: qonto, country: France, enabled: true}
+  - {name: FINN, ats: lever, board_id: finn, country: Germany, size_band: "251-1000", enabled: true}
+  - {name: Qonto, ats: lever, board_id: qonto, country: France, size_band: "1000+", enabled: true}
   # ---- Adapters pending (verified boards, disabled until the adapter lands) ----
   - {name: Tytan Technologies, ats: recruitee, board_id: tytantechnologiesgmbh, country: Germany, enabled: false}
   - {name: UP42, ats: recruitee, board_id: up42gmbh, country: Germany, enabled: false}
