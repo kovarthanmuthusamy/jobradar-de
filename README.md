@@ -1,3 +1,5 @@
+![cover](cover.png)
+
 # JobRadar DE
 
 A token-efficient job aggregator for German AI/ML roles. It replaces
